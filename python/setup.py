@@ -68,24 +68,29 @@ def get_pybind11_package_info():
 def get_llvm_package_info():
     # added statement for Apple Silicon
     system = platform.system()
-    arch = 'x86_64'
+    arch = platform.machine()
+    if arch == 'aarch64':
+        arch = 'arm64'
     if system == "Darwin":
-        system_suffix = "apple-darwin"
-        cpu_type = os.popen('sysctl machdep.cpu.brand_string').read()
-        if "apple" in cpu_type.lower():
-            arch = 'arm64'
+        arch = platform.machine()
+        if arch == "x86_64":
+            arch = "x64"
+        system_suffix = f"macos-{arch}"
     elif system == "Linux":
-        vglibc = tuple(map(int, platform.libc_ver()[1].split('.')))
-        vglibc = vglibc[0] * 100 + vglibc[1]
-        linux_suffix = 'ubuntu-18.04' if vglibc > 217 else 'centos-7'
-        system_suffix = f"linux-gnu-{linux_suffix}"
+        if arch == 'arm64':
+            system_suffix = 'ubuntu-arm64'
+        else:
+            vglibc = tuple(map(int, platform.libc_ver()[1].split('.')))
+            vglibc = vglibc[0] * 100 + vglibc[1]
+            system_suffix = 'ubuntu-x64' if vglibc > 217 else 'centos-x64'
     else:
         return Package("llvm", "LLVM-C.lib", "", "LLVM_INCLUDE_DIRS", "LLVM_LIBRARY_DIR", "LLVM_SYSPATH")
-    use_assert_enabled_llvm = check_env_flag("TRITON_USE_ASSERT_ENABLED_LLVM", "False")
-    release_suffix = "assert" if use_assert_enabled_llvm else "release"
-    name = f'llvm+mlir-17.0.0-{arch}-{system_suffix}-{release_suffix}'
-    version = "llvm-17.0.0-c5dede880d17"
-    url = f"https://github.com/ptillet/triton-llvm-releases/releases/download/{version}/{name}.tar.xz"
+    # use_assert_enabled_llvm = check_env_flag("TRITON_USE_ASSERT_ENABLED_LLVM", "False")
+    # release_suffix = "assert" if use_assert_enabled_llvm else "release"
+    llvm_hash_file = open("../cmake/llvm-hash.txt", "r")
+    rev = llvm_hash_file.read(8)
+    name = f"llvm-{rev}-{system_suffix}"
+    url = f"https://tritonlang.blob.core.windows.net/llvm-builds/{name}.tar.gz"
     return Package("llvm", name, url, "LLVM_INCLUDE_DIRS", "LLVM_LIBRARY_DIR", "LLVM_SYSPATH")
 
 
@@ -125,8 +130,8 @@ def download_and_copy_ptxas():
 
     base_dir = os.path.dirname(__file__)
     src_path = "bin/ptxas"
-    version = "12.1.105"
-    url = f"https://conda.anaconda.org/nvidia/label/cuda-12.1.1/linux-64/cuda-nvcc-{version}-0.tar.bz2"
+    version = "11.8.89"
+    url = f"https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-aarch64/cuda-nvcc-{version}-0.tar.bz2"
     dst_prefix = os.path.join(base_dir, "triton")
     dst_suffix = os.path.join("third_party", "cuda", src_path)
     dst_path = os.path.join(dst_prefix, dst_suffix)
