@@ -87,11 +87,11 @@ def get_llvm_package_info():
         return Package("llvm", "LLVM-C.lib", "", "LLVM_INCLUDE_DIRS", "LLVM_LIBRARY_DIR", "LLVM_SYSPATH")
     # use_assert_enabled_llvm = check_env_flag("TRITON_USE_ASSERT_ENABLED_LLVM", "False")
     # release_suffix = "assert" if use_assert_enabled_llvm else "release"
-    llvm_hash_file = open("../cmake/llvm-hash.txt", "r")
-    rev = llvm_hash_file.read(8)
-    name = "clang+llvm-17.0.1-aarch64-linux-gnu"
+    #llvm_hash_file = open("../cmake/llvm-hash.txt", "r")
+    #rev = llvm_hash_file.read(8)
+    name = "clang+llvm-16.0.4-aarch64-linux-gnu"
     # url = f"https://tritonlang.blob.core.windows.net/llvm-builds/{name}.tar.gz"
-    url = "https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.1/clang+llvm-17.0.1-aarch64-linux-gnu.tar.xz"
+    url = "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang+llvm-16.0.4-aarch64-linux-gnu.tar.xz"
     return Package("llvm", name, url, "LLVM_INCLUDE_DIRS", "LLVM_LIBRARY_DIR", "LLVM_SYSPATH")
 
 
