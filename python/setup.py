@@ -89,9 +89,10 @@ def get_llvm_package_info():
     # release_suffix = "assert" if use_assert_enabled_llvm else "release"
     #llvm_hash_file = open("../cmake/llvm-hash.txt", "r")
     #rev = llvm_hash_file.read(8)
-    name = "clang+llvm-16.0.4-aarch64-linux-gnu"
+    name = "llvm+mlir-17.0.0-arm64-linux-gnu-ubuntu-18.04-release"
     # url = f"https://tritonlang.blob.core.windows.net/llvm-builds/{name}.tar.gz"
-    url = "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang+llvm-16.0.4-aarch64-linux-gnu.tar.xz"
+    #url = "https://drive.usercontent.google.com/download?id=1ER0de3RBU7H7Cs0PAEfw-cxMpwujik2P&export=download&authuser=1&confirm=t&uuid=6ecc157d-f41e-4963-9776-f7539c810722&at=APZUnTWy6q7_VNzMHrcDv5yURtGc:1712108363126"
+    url = "https://github.com/acollins3/triton-llvm-releases/releases/download/llvm-17.0.0-c5dede880d17/llvm+mlir-17.0.0-arm64-linux-gnu-ubuntu-18.04-release.tar.xz"
     return Package("llvm", name, url, "LLVM_INCLUDE_DIRS", "LLVM_LIBRARY_DIR", "LLVM_SYSPATH")
 
 
@@ -131,8 +132,8 @@ def download_and_copy_ptxas():
 
     base_dir = os.path.dirname(__file__)
     src_path = "bin/ptxas"
-    version = "11.8.89"
-    url = f"https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-aarch64/cuda-nvcc-{version}-0.tar.bz2"
+    version = "12.1.105"
+    url = f"https://conda.anaconda.org/nvidia/label/cuda-12.1.1/linux-aarch64/cuda-nvcc-{version}-0.tar.bz2"
     dst_prefix = os.path.join(base_dir, "triton")
     dst_suffix = os.path.join("third_party", "cuda", src_path)
     dst_path = os.path.join(dst_prefix, dst_suffix)
